@@ -9,12 +9,42 @@ RUN corepack enable
 WORKDIR /app
 
 ARG CLAWDBOT_DOCKER_APT_PACKAGES=""
-RUN if [ -n "$CLAWDBOT_DOCKER_APT_PACKAGES" ]; then \
-      apt-get update && \
-      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $CLAWDBOT_DOCKER_APT_PACKAGES && \
-      apt-get clean && \
-      rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
-    fi
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    $CLAWDBOT_DOCKER_APT_PACKAGES \
+    python3 \
+    python3-pip \
+    python3-venv \
+    poppler-utils \
+    qpdf \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    tesseract-ocr-por \
+    ffmpeg && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*;
+
+# Setup Python Virtual Environment
+# We use a venv to avoid PEP 668 issues on Debian Bookworm
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Install Python dependencies
+# We install these as root but they will be accessible to all users via the global read permissions
+# and the PATH modification above.
+RUN pip install --no-cache-dir \
+    pdfminer.six \
+    PyPDF2 \
+    python-docx \
+    pillow \
+    pytesseract \
+    requests \
+    beautifulsoup4
+
+# Ownership adjustment for runtime pip installs
+# This allows the 'node' user to install additional packages at runtime if needed
+RUN chown -R node:node $VIRTUAL_ENV
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY ui/package.json ./ui/package.json
