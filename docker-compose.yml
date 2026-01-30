@@ -2,6 +2,7 @@ services:
   moltbot-gateway:
     container_name: moltbot
     image: ${CLAWDBOT_IMAGE:-moltbot:local}
+    build: .
     environment:
       HOME: /home/node
       MOLTBOT_STATE_DIR: /var/lib/moltbot
@@ -10,14 +11,19 @@ services:
       CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY}
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      VOICE_AGENT_API_URL: http://voice-backend:8000
+      CLAWDBOT_GATEWAY_PASSWORD: ${CLAWDBOT_GATEWAY_PASSWORD}
     volumes:
       - moltbot_data:/var/lib/moltbot
       - moltbot_workspace:/home/node/clawd
     ports:
-      - "${CLAWDBOT_GATEWAY_PORT:-18789}:18789"
-      - "${CLAWDBOT_BRIDGE_PORT:-18790}:18790"
+      - "127.0.0.1:${CLAWDBOT_GATEWAY_PORT:-18789}:18789"
+      - "127.0.0.1:${CLAWDBOT_BRIDGE_PORT:-18790}:18790"
     init: true
     restart: unless-stopped
+    depends_on:
+      - voice-backend
     command:
       [
         "node",
@@ -29,6 +35,28 @@ services:
         "${CLAWDBOT_GATEWAY_PORT:-18789}",
         "--allow-unconfigured"
       ]
+
+  voice-backend:
+    image: trevisanricardo/ai-voice-backend:latest
+    container_name: voice-backend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LANGUAGE=${LANGUAGE:-pt}
+      - WHISPER_DEVICE=cuda
+      - WHISPER_COMPUTE_TYPE=float16
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
 
 volumes:
   moltbot_data:

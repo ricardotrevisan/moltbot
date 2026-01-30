@@ -37,7 +37,8 @@ RUN ln -s /app/moltbot.mjs /usr/local/bin/moltbot
 
 # Ensure state directories exist and are owned by node
 RUN mkdir -p /var/lib/moltbot /home/node/clawd && \
-    chown -R node:node /var/lib/moltbot /home/node/clawd
+    chown -R node:node /var/lib/moltbot /home/node/clawd && \
+    chmod 700 /var/lib/moltbot
 
 # Security hardening: Run as non-root user
 # The node:22-bookworm image includes a 'node' user (uid 1000)

@@ -75,3 +75,17 @@ docker compose up -d
 docker exec -it moltbot moltbot status
 docker exec -it moltbot moltbot onboard
 ```
+
+## 4. Configuration (.env)
+
+We added a `.env.example` file to manage the new stack. 
+
+```bash
+cp .env.example .env
+# Edit .env with your keys
+```
+
+Included variables:
+*   `OPENAI_API_KEY`: For the main agent.
+*   `AWS_*`: For the GPU Voice Backend (Polly TTS).
+
