@@ -13,8 +13,9 @@ This guide covers how to set up, run, and configure Moltbot with the GPU-acceler
 ### B. Setup
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/moltbot/moltbot.git
+    git clone https://github.com/ricardotrevisan/moltbot.git
     cd moltbot
+    git checkout feature/voice-agent-skill
     ```
 
 2.  **Configure Environment**:
