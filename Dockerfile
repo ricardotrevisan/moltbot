@@ -13,7 +13,13 @@ WORKDIR /app
 # =========================
 # APT packages
 # =========================
-ARG CLAWDBOT_DOCKER_APT_PACKAGES=""
+ARG OPENCLAW_DOCKER_APT_PACKAGES=""
+RUN if [ -n "$OPENCLAW_DOCKER_APT_PACKAGES" ]; then \
+      apt-get update && \
+      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $OPENCLAW_DOCKER_APT_PACKAGES && \
+      apt-get clean && \
+      rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
+    fi
 
 # Install dependencies including Chromium and Python tools
 RUN apt-get update && \
@@ -98,11 +104,9 @@ RUN pnpm install --frozen-lockfile
 # Build
 # =========================
 COPY . .
-
-RUN CLAWDBOT_A2UI_SKIP_MISSING=1 pnpm build
-
-ENV CLAWDBOT_PREFER_PNPM=1
-RUN pnpm ui:install
+RUN OPENCLAW_A2UI_SKIP_MISSING=1 pnpm build
+# Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
+ENV OPENCLAW_PREFER_PNPM=1
 RUN pnpm ui:build
 
 ENV NODE_ENV=production
