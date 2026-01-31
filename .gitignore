@@ -71,3 +71,7 @@ USER.md
 
 # local tooling
 .serena/
+.env_new
+# Security & Local Data
+.env.voice
+data/
