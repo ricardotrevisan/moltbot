@@ -45,6 +45,7 @@ services:
     env_file:
       - .env.voice
     environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
       - LANGUAGE=${LANGUAGE:-pt}
       - WHISPER_DEVICE=cuda
       - WHISPER_COMPUTE_TYPE=float16
