@@ -75,3 +75,5 @@ USER.md
 # Security & Local Data
 .env.voice
 data/
+
+.serena/
