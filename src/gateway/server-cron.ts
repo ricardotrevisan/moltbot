@@ -27,6 +27,7 @@ export function buildGatewayCronService(params: {
   const cronLogger = getChildLogger({ module: "cron" });
   const storePath = resolveCronStorePath(params.cfg.cron?.store);
   const cronEnabled = process.env.CLAWDBOT_SKIP_CRON !== "1" && params.cfg.cron?.enabled !== false;
+  const timezone = params.cfg.cron?.timezone?.trim() || process.env.TZ?.trim();
 
   const resolveCronAgent = (requested?: string | null) => {
     const runtimeConfig = loadConfig();
@@ -46,6 +47,7 @@ export function buildGatewayCronService(params: {
   const cron = new CronService({
     storePath,
     cronEnabled,
+    timezone,
     enqueueSystemEvent: (text, opts) => {
       const { agentId, cfg: runtimeConfig } = resolveCronAgent(opts?.agentId);
       const sessionKey = resolveAgentMainSessionKey({

@@ -157,7 +157,7 @@ export async function executeJob(
         const waitStartedAt = state.deps.nowMs();
 
         let heartbeatResult: HeartbeatRunResult;
-        for (;;) {
+        for (; ;) {
           heartbeatResult = await state.deps.runHeartbeatOnce({ reason });
           if (
             heartbeatResult.status !== "skipped" ||
@@ -209,7 +209,7 @@ export async function executeJob(
     job.updatedAtMs = nowMs;
     if (!opts.forced && job.enabled && !deleted) {
       // Keep nextRunAtMs in sync in case the schedule advanced during a long run.
-      job.state.nextRunAtMs = computeJobNextRunAtMs(job, state.deps.nowMs());
+      job.state.nextRunAtMs = computeJobNextRunAtMs(job, state.deps.nowMs(), state.deps.timezone);
     }
   }
 }

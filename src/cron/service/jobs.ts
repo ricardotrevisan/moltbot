@@ -33,14 +33,18 @@ export function findJobOrThrow(state: CronServiceState, id: string) {
   return job;
 }
 
-export function computeJobNextRunAtMs(job: CronJob, nowMs: number): number | undefined {
+export function computeJobNextRunAtMs(
+  job: CronJob,
+  nowMs: number,
+  defaultTz?: string,
+): number | undefined {
   if (!job.enabled) return undefined;
   if (job.schedule.kind === "at") {
     // One-shot jobs stay due until they successfully finish.
     if (job.state.lastStatus === "ok" && job.state.lastRunAtMs) return undefined;
     return job.schedule.atMs;
   }
-  return computeNextRunAtMs(job.schedule, nowMs);
+  return computeNextRunAtMs(job.schedule, nowMs, defaultTz);
 }
 
 export function recomputeNextRuns(state: CronServiceState) {
@@ -61,7 +65,7 @@ export function recomputeNextRuns(state: CronServiceState) {
       );
       job.state.runningAtMs = undefined;
     }
-    job.state.nextRunAtMs = computeJobNextRunAtMs(job, now);
+    job.state.nextRunAtMs = computeJobNextRunAtMs(job, now, state.deps.timezone);
   }
 }
 
@@ -97,7 +101,7 @@ export function createJob(state: CronServiceState, input: CronJobCreate): CronJo
     },
   };
   assertSupportedJobSpec(job);
-  job.state.nextRunAtMs = computeJobNextRunAtMs(job, now);
+  job.state.nextRunAtMs = computeJobNextRunAtMs(job, now, state.deps.timezone);
   return job;
 }
 

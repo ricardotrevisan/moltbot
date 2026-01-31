@@ -42,11 +42,9 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:8000:8000"
+    env_file:
+      - .env.voice
     environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_REGION:-us-east-1}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
       - LANGUAGE=${LANGUAGE:-pt}
       - WHISPER_DEVICE=cuda
       - WHISPER_COMPUTE_TYPE=float16

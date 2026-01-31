@@ -35,6 +35,7 @@ export type CronServiceDeps = {
     error?: string;
   }>;
   onEvent?: (evt: CronEvent) => void;
+  timezone?: string;
 };
 
 export type CronServiceDepsInternal = Omit<CronServiceDeps, "nowMs"> & {

@@ -85,7 +85,7 @@ export async function update(state: CronServiceState, id: string, patch: CronJob
     applyJobPatch(job, patch);
     job.updatedAtMs = now;
     if (job.enabled) {
-      job.state.nextRunAtMs = computeJobNextRunAtMs(job, now);
+      job.state.nextRunAtMs = computeJobNextRunAtMs(job, now, state.deps.timezone);
     } else {
       job.state.nextRunAtMs = undefined;
       job.state.runningAtMs = undefined;
