@@ -114,7 +114,7 @@ ENV NODE_ENV=production
 # =========================
 # CLI
 # =========================
-RUN ln -s /app/moltbot.mjs /usr/local/bin/moltbot
+RUN ln -s /app/openclaw.mjs /usr/local/bin/openclaw && ln -s /app/openclaw.mjs /usr/local/bin/moltbot
 
 # =========================
 # Runtime dirs + permissions

@@ -15,7 +15,6 @@ services:
       VOICE_AGENT_API_URL: http://voice-backend:8000
       CLAWDBOT_GATEWAY_PASSWORD: ${CLAWDBOT_GATEWAY_PASSWORD}
     volumes:
-    volumes:
       - ${OPENCLAW_CONFIG_DIR:-./data/config}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR:-./data/workspace}:/home/node/.openclaw/workspace
     ports:
@@ -28,7 +27,7 @@ services:
     command:
       [
         "node",
-        "/app/moltbot.mjs",
+        "/app/openclaw.mjs",
         "gateway",
         "--bind",
         "${OPENCLAW_GATEWAY_BIND:-lan}",
