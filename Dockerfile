@@ -77,6 +77,7 @@ ENV CHROMIUM_FLAGS="--headless=new \
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
 RUN pip install --no-cache-dir \
     pdfminer.six \

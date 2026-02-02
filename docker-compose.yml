@@ -24,6 +24,9 @@ services:
     restart: unless-stopped
     depends_on:
       - voice-backend
+    networks:
+      - default
+      - openclaw-postgres-link
     command:
       [
         "node",
@@ -73,3 +76,8 @@ services:
     tty: true
     init: true
     entrypoint: ["node", "dist/index.js"]
+
+networks:
+  openclaw-postgres-link:
+    external: true
+    name: n8n-scrapy-stack_openclaw-postgres-link
