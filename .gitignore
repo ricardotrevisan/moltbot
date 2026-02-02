@@ -77,3 +77,11 @@ USER.md
 data/
 
 .serena/
+persona/venv/
+persona/media/
+persona/*.py
+
+
+__pycache__/
+*.pyc
+
