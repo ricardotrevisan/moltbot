@@ -111,6 +111,21 @@ export function createJob(state: CronServiceState, input: CronJobCreate): CronJo
     },
   };
   assertSupportedJobSpec(job);
+
+  if (job.schedule.kind === "at") {
+    // User requested "realistic... only allow future scheduling".
+    // We allow a small grace period (1 minute) for network latency/processing time,
+    // but reject anything significantly in the past (like the 2024 bug).
+    const pastCutoff = now - 60 * 1000;
+    if (job.schedule.atMs < pastCutoff) {
+      throw new Error(
+        `Cannot schedule a job in the past (requested: ${new Date(
+          job.schedule.atMs,
+        ).toISOString()}, now: ${new Date(now).toISOString()})`,
+      );
+    }
+  }
+
   job.state.nextRunAtMs = computeJobNextRunAtMs(job, now, state.deps.timezone);
   return job;
 }

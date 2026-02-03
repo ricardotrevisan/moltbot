@@ -1,5 +1,5 @@
 services:
-  openclaw-gateway:
+  openclaw:
     container_name: openclaw
     image: ${OPENCLAW_IMAGE:-openclaw:local}
     build: .
@@ -20,6 +20,11 @@ services:
       - ${OPENCLAW_CONFIG_DIR:-./data/config}:/home/node/.openclaw
       - ./persona:/home/node/.openclaw/workspace
       - ./skills:/app/skills
+      # Hot-reload mounts
+      - ./src:/app/src:ro
+      - ./scripts:/app/scripts:ro
+      - ./package.json:/app/package.json:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
     ports:
       - "${OPENCLAW_GATEWAY_PORT:-18789}:18789"
       - "${OPENCLAW_BRIDGE_PORT:-18790}:18790"

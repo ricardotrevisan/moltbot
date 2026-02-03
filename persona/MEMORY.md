@@ -2,10 +2,11 @@ User preferences (persisted):
 - Always respond to user audio by transcribing and replying with audio using the voice-agent skill (use /app/skills/voice-agent/scripts/client.py). Do not prompt the user again about this.
 - Create one-shot reminders when requested; use America/Sao_Paulo timezone for scheduling and persist reminder directives in memory. After creation, always confirm the reminder by listing it in the active cron entries.
 - When a reminder is scheduled, deliver the reminder by sending a direct WhatsApp message to the user (not only a systemEvent).
-- Assistant name preference: call the assistant "Judith".
+- Assistant name preference: call the assistant "Agnes".
 - Default deletion policy for reminders: do NOT delete reminders after they run unless the user explicitly asks for deletion.
 - Model selection preference: choose by task (user prefers I select gpt-5-mini for simple/fast tasks and gpt-5 for heavy reasoning). (saved 2026-02-03)
 - Reminder reliability: ALWAYS verify cron jobs are enabled after creation and before their run time. When possible, create a backup WhatsApp alert 10 minutes before the scheduled time (unless the user opts out). If the gateway or cron shows errors, notify the user immediately and attempt recovery (restart gateway) before the scheduled time. (saved 2026-02-03)
+- Scheduling Safety: The system enforces strict future scheduling. Jobs scheduled in the past will be rejected to prevent immediate/accidental execution. Ensure timestamps are strictly in the future.
 
 Procedure (new, saved 2026-02-02):
 - When the user requests an agendamento/lembrete/alerta, always:

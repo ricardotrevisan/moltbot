@@ -60,6 +60,7 @@ const BASE_RELOAD_RULES: ReloadRule[] = [
     kind: "hot",
     actions: ["restart-browser-control"],
   },
+  { prefix: "meta", kind: "none" },
 ];
 
 const BASE_RELOAD_RULES_TAIL: ReloadRule[] = [
@@ -371,7 +372,7 @@ export function startGatewayConfigReloader(opts: {
     }
     watcherClosed = true;
     opts.log.warn(`config watcher error: ${String(err)}`);
-    void watcher.close().catch(() => {});
+    void watcher.close().catch(() => { });
   });
 
   return {
@@ -382,7 +383,7 @@ export function startGatewayConfigReloader(opts: {
       }
       debounceTimer = null;
       watcherClosed = true;
-      await watcher.close().catch(() => {});
+      await watcher.close().catch(() => { });
     },
   };
 }
