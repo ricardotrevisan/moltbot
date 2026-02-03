@@ -1,6 +1,6 @@
 services:
   openclaw-gateway:
-    container_name: openclaw-gateway
+    container_name: openclaw
     image: ${OPENCLAW_IMAGE:-openclaw:local}
     build: .
     environment:
@@ -12,11 +12,14 @@ services:
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       VOICE_AGENT_API_URL: http://voice-backend:8000
       CLAWDBOT_GATEWAY_PASSWORD: ${CLAWDBOT_GATEWAY_PASSWORD}
     volumes:
       - ${OPENCLAW_CONFIG_DIR:-./data/config}:/home/node/.openclaw
+      - ${OPENCLAW_CONFIG_DIR:-./data/config}:/home/node/.openclaw
       - ./persona:/home/node/.openclaw/workspace
+      - ./skills:/app/skills
     ports:
       - "${OPENCLAW_GATEWAY_PORT:-18789}:18789"
       - "${OPENCLAW_BRIDGE_PORT:-18790}:18790"
@@ -71,7 +74,9 @@ services:
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
     volumes:
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
+      - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
+      - ./skills:/app/skills
     stdin_open: true
     tty: true
     init: true

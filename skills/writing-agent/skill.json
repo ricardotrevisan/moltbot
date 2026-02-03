@@ -1,0 +1,61 @@
+{
+    "tools": [
+        {
+            "type": "function",
+            "function": {
+                "name": "fetch_news",
+                "description": "Fetches the latest AI news and returns a list of indexed items.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "topic": {
+                            "type": "string",
+                            "description": "Optional. LEAVE EMPTY by default to let the service curate valid news. Only use if user strictly overrides."
+                        },
+                        "days_back": {
+                            "type": "integer",
+                            "default": 1,
+                            "description": "Number of days back to search."
+                        }
+                    },
+                    "required": []
+                }
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "generate_article",
+                "description": "Generates a full article draft from a selected news item cache index.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "index": {
+                            "type": "integer",
+                            "description": "The index of the news item to use (from the fetch_news list)."
+                        },
+                        "provider": {
+                            "type": "string",
+                            "default": "openai",
+                            "description": "The LLM provider to use."
+                        }
+                    },
+                    "required": [
+                        "index"
+                    ]
+                }
+            }
+        }
+    ],
+    "tool_choice": "auto",
+    "api_mapping": {
+        "fetch_news": {
+            "method": "SHELL",
+            "command": "python3 skills/writing-agent/news_client.py fetch --days {{days_back}} {{#if topic}}--topic \"{{topic}}\"{{/if}}"
+        },
+        "generate_article": {
+            "method": "SHELL",
+            "command": "python3 skills/writing-agent/news_client.py generate {{index}} --provider {{provider}}"
+        }
+    }
+}

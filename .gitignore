@@ -85,3 +85,6 @@ persona/*.py
 __pycache__/
 *.pyc
 
+persona/
+persona/logs
+persona/*
